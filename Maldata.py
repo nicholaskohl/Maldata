@@ -4,7 +4,7 @@ right now I haven't added the option to dynamically add your animelist, but simp
 Be sure to compile with the command "python -X utf8 Maldata.py" to make sure it accurately parases utf-8 encoded character
 """
 import xml.etree.ElementTree as ET
-from xml.etree.ElementTree import Element
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -36,9 +36,13 @@ def ScoreEpisode(dataf) -> None:
 def summary(dataf):
     tv_shows = dataf[dataf['type'] == 'TV']
     movies = dataf[dataf['type'] == 'Movie']
-    print(f"the average amount of episodes you watch per anime is {tv_shows["watched"].mean():.2f}")
-    print(f"the average score you give to movies is {movies["score"].mean():.2f} and to tv shows {tv_shows["score"].mean():.2f}")
+    interacted = dataf[dataf['status'] != 'Plan to Watch']
+    percentage = (interacted["watched"].mean()/interacted["episodes"].mean())
+    print(f"The average amount of episodes you watch per anime is {tv_shows["watched"].mean():.2f}")
+    print(f"Out of the shows you've watched, you've finished {percentage*100:.2f}% of their episodes")
+    print(f"The average score you give to movies is {movies["score"].mean():.2f} and to tv shows {tv_shows["score"].mean():.2f}")
     print(f"And the total amount of episodes you've watched is {dataf["watched"].sum()}")
+    
 def scorepie(dataf):
     scores = dataf['score'].value_counts()
 
@@ -56,4 +60,28 @@ def barstat(dataf):
     plt.xlabel('statuses')
     plt.ylabel('Amount')
     plt.show()
-scorepie(dataf)
+def longest(dataf):
+    
+    
+     sorted_df = dataf.sort_values(by='watched', ascending=False)
+     top_ten_longest = sorted_df.head(10)
+     count = 1
+     print("Your 10 longest shows are\n")
+     for index, row in top_ten_longest.iterrows():
+        print(f"Number {count} {row['title']} at {row['watched']} episodes watched with a status of {row['status']}")
+        print()
+        count += 1
+def toprated(dataf):
+    sorted_df = dataf.sort_values(by='score', ascending=False)
+    top_score =sorted_df['score'].max()
+    top_scores = sorted_df[sorted_df['score'] == top_score]
+    for index, row in top_scores.iterrows():
+        print(f"{row['title']} at a rating of {top_score}")
+
+   
+        
+            
+        
+toprated(dataf)
+
+
