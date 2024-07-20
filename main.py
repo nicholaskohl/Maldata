@@ -11,13 +11,13 @@ class StartPage(ttk.Frame):
         root.title("Enter in the file name")
         
         mainframe = ttk.Frame(root, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0 , sticky=(N, W, E, S))
+        mainframe.grid(column=0, row=0 , sticky=("N W E S"))
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
 
         self.filename = StringVar()
         filename_entry = ttk.Entry(mainframe, width=7, textvariable=self.filename)
-        filename_entry.grid(column=2,row=1,sticky=(W, E))
+        filename_entry.grid(column=2,row=1,sticky=("W E"))
         self.test = StringVar()
         ttk.Label(mainframe,text="Enter your filename").grid(column=1, row=1)
         ttk.Button(mainframe,text="continue").grid(column=2,row=2)
@@ -26,43 +26,61 @@ class StartPage(ttk.Frame):
             child.grid_configure(padx=5, pady=5)
         filename_entry.focus()
 class Page1(ttk.Frame):
-    def __init__(self,root , dataf):
+    def __init__(self,root ):
         root.title("Anime Data Analyzer")
         
         mainframe = ttk.Frame(root, padding="3 3 12 12")
-        mainframe.grid(column=0, row=0 , sticky=(N, W, E, S))
+        mainframe.grid(column=0, row=0 , sticky=("N W E S"))
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
         self.text_widget = Text(mainframe, height=10, width=40)
         self.text_widget.grid(column=0, row=2, columnspan=3)
 
+        #Need to add  Scores by ep graph, scorepie, barstatus, longest, toprated,
+        ttk.Button(mainframe,text="Scores by Episode Count (opens graph in new window",command=md.ScoreEpisode(dataf)).grid(column=1,row=6)
+        ttk.Button(mainframe,text="Scores in a Pi chart (opens graph in new window",command=md.scorepie(dataf)).grid(column=1,row=5)
+        ttk.Button(mainframe,text="Bar Graph by Status",command=md.barstat(dataf)).grid(column=1,row=4)
+        ttk.Button(mainframe,text="10 Longest Episodes",command=self.update_text2).grid(column=1,row=3)
+                   #ttk.Button(mainframe,text="top rated shows ",command=).grid(column=1,row=2)
         ttk.Button(mainframe,text="summary", command=self.update_text).grid(column=1, row=1)
         ttk.Button(mainframe,text="quit",command=root.destroy).grid(column=1, row=0)
+         
     def update_text(self):
         string_value=md.summary(dataf) 
         self.text_widget.delete(1.0,END)
         self.text_widget.insert(END, string_value)
+    def update_text2(self):
+        string_value = md.longest(dataf)
+        self.text_widget.delete(1.0,END)
+        self.text_widget.insert(END, string_value)
+xmlp: ET.XMLParser = ET.XMLParser(encoding="UTF-8")
+tree: ET.ElementTree = ET.parse(source="animelist_nicholas.xml", parser=xmlp)
+Aroot: ET.Element = tree.getroot()
 
-xmlp = ET.XMLParser(encoding="UTF-8")
-tree = ET.parse(source='animelist_nicholas.xml', parser=xmlp)
-root = tree.getroot()
-data = []
-for anime in root.findall('anime'):#id,title,tpye,episodes,wathced episodes, score, status
+data: list[dict[str, any]] = []
+
+for anime in Aroot.findall('anime'):
+    series_id: str = anime.find('series_animedb_id').text
+    title: str = anime.find('series_title').text
+    type_: str = anime.find('series_type').text
+    episodes: int = int(anime.find('series_episodes').text)
+    watched: int = int(anime.find('my_watched_episodes').text)
+    score: int = int(anime.find('my_score').text)
+    status: str = anime.find('my_status').text
+
     data.append({
-        "series_id": anime.find('series_animedb_id').text,
-        "title": anime.find('series_title').text,
-        "type": anime.find('series_type').text,
-        "episodes": int(anime.find('series_episodes').text),
-        "watched": int(anime.find('my_watched_episodes').text),
-        "score": int(anime.find('my_score').text),
-        "status": anime.find('my_status').text
+        "series_id": series_id,
+        "title": title,
+        "type": type_,
+        "episodes": episodes,
+        "watched": watched,
+        "score": score,
+        "status": status,
         })
 
-dataf = pd.DataFrame(data)
-
-
+    dataf: pd.DataFrame = pd.DataFrame(data)
 
 root = Tk()
-Page1(root, dataf)
+Page1(root)
 root.mainloop()
 
