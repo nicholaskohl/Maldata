@@ -39,7 +39,18 @@ def summary(dataf):
     movies = dataf[dataf['type'] == 'Movie']
     interacted = dataf[dataf['status'] != 'Plan to Watch']
     percentage = (interacted["watched"].mean()/interacted["episodes"].mean())
-    return f"The average amount of episodes you watch per anime is {tv_shows["watched"].mean():.2f}\nOut of the shows you've watched, you've finished {percentage*100:.2f}% of their episodes\nThe average score you give to movies is {movies["score"].mean():.2f} and to tv shows {tv_shows["score"].mean():.2f}\nAnd the total amount of episodes you've watched is {dataf["watched"].sum()}\n"
+    average_episodes = tv_shows["watched"].mean()
+    finished_percentage = percentage * 100
+    average_movie_score = movies["score"].mean()
+    average_tv_score = tv_shows["score"].mean()
+    total_episodes_watched = dataf["watched"].sum()
+    result = (
+            f"The average amount of episodes you watch per anime is {average_episodes:.2f}\n"
+            f"Out of the shows you've watched, you've finished {finished_percentage:.2f}% of their episodes\n"
+            f"The average score you give to movies is {average_movie_score:.2f} and to tv shows {average_tv_score:.2f}\n"
+            f"And the total amount of episodes you've watched is {total_episodes_watched}\n"
+            )
+    return result
     
 def scorepie(dataf):
     scores = dataf['score'].value_counts()
@@ -65,17 +76,20 @@ def longest(dataf):
      top_ten_longest = sorted_df.head(10)
      count = 1
      print("Your 10 longest shows are\n")
+     resultStr = ""
      for index, row in top_ten_longest.iterrows():
-        print(f"Number {count} {row['title']} at {row['watched']} episodes watched with a status of {row['status']}")
-        print()
+        resultStr += f"Number {count} {row['title']} at {row['watched']} episodes watched with a status of {row['status']}\n"
         count += 1
+     return resultStr
+        
 def toprated(dataf):
     sorted_df = dataf.sort_values(by='score', ascending=False)
     top_score =sorted_df['score'].max()
     top_scores = sorted_df[sorted_df['score'] == top_score]
+    resultStr = ""
     for index, row in top_scores.iterrows():
-        print(f"{row['title']} at a rating of {top_score}")
-
+        resultStr += f"{row['title']} at a rating of {top_score}\n"
+    return resultStr
    
         
             
