@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 
 import matplotlib.pyplot as plt
 import pandas as pd
-
+"""
 # Ensure proper encoding handling
 xmlp = ET.XMLParser(encoding="UTF-8")
 tree = ET.parse(source='', parser=xmlp)
@@ -25,6 +25,7 @@ for anime in root.findall('anime'):#id,title,tpye,episodes,wathced episodes, sco
         })
 
 dataf = pd.DataFrame(data)
+"""
 def ScoreEpisode(dataf) -> None:
     plt.figure(figsize=(10,6))
     plt.scatter(dataf['watched'],dataf['score'],alpha=0.6)
@@ -38,10 +39,7 @@ def summary(dataf):
     movies = dataf[dataf['type'] == 'Movie']
     interacted = dataf[dataf['status'] != 'Plan to Watch']
     percentage = (interacted["watched"].mean()/interacted["episodes"].mean())
-    print(f"The average amount of episodes you watch per anime is {tv_shows["watched"].mean():.2f}")
-    print(f"Out of the shows you've watched, you've finished {percentage*100:.2f}% of their episodes")
-    print(f"The average score you give to movies is {movies["score"].mean():.2f} and to tv shows {tv_shows["score"].mean():.2f}")
-    print(f"And the total amount of episodes you've watched is {dataf["watched"].sum()}")
+    return f"The average amount of episodes you watch per anime is {tv_shows["watched"].mean():.2f}\nOut of the shows you've watched, you've finished {percentage*100:.2f}% of their episodes\nThe average score you give to movies is {movies["score"].mean():.2f} and to tv shows {tv_shows["score"].mean():.2f}\nAnd the total amount of episodes you've watched is {dataf["watched"].sum()}\n"
     
 def scorepie(dataf):
     scores = dataf['score'].value_counts()
@@ -82,6 +80,6 @@ def toprated(dataf):
         
             
         
-toprated(dataf)
+
 
 
