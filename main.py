@@ -34,14 +34,14 @@ class Page1(ttk.Frame):
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
         self.text_widget = Text(mainframe, height=10, width=40)
-        self.text_widget.grid(column=0, row=2, columnspan=3)
+        self.text_widget.grid(column=1, row=2, columnspan=3)
 
         #Need to add  Scores by ep graph, scorepie, barstatus, longest, toprated,
         ttk.Button(mainframe,text="Scores by Episode Count (opens graph in new window",command=md.ScoreEpisode(dataf)).grid(column=1,row=6)
         ttk.Button(mainframe,text="Scores in a Pi chart (opens graph in new window",command=md.scorepie(dataf)).grid(column=1,row=5)
         ttk.Button(mainframe,text="Bar Graph by Status",command=md.barstat(dataf)).grid(column=1,row=4)
         ttk.Button(mainframe,text="10 Longest Episodes",command=self.update_text2).grid(column=1,row=3)
-                   #ttk.Button(mainframe,text="top rated shows ",command=).grid(column=1,row=2)
+        ttk.Button(mainframe,text="top rated shows ",command=self.update_text1).grid(column=1,row=2)
         ttk.Button(mainframe,text="summary", command=self.update_text).grid(column=1, row=1)
         ttk.Button(mainframe,text="quit",command=root.destroy).grid(column=1, row=0)
          
@@ -51,6 +51,10 @@ class Page1(ttk.Frame):
         self.text_widget.insert(END, string_value)
     def update_text2(self):
         string_value = md.longest(dataf)
+        self.text_widget.delete(1.0,END)
+        self.text_widget.insert(END, string_value)
+    def update_text1(self):
+        string_value = md.toprated(dataf)
         self.text_widget.delete(1.0,END)
         self.text_widget.insert(END, string_value)
 xmlp: ET.XMLParser = ET.XMLParser(encoding="UTF-8")
