@@ -4,7 +4,9 @@ right now I haven't added the option to dynamically add your animelist, but simp
 Be sure to compile with the command "python -X utf8 Maldata.py" to make sure it accurately parases utf-8 encoded character
 """
 import xml.etree.ElementTree as ET
-
+import tkinter as tk
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import ttk
 import matplotlib.pyplot as plt
 import pandas as pd
 """
@@ -26,6 +28,7 @@ for anime in root.findall('anime'):#id,title,tpye,episodes,wathced episodes, sco
 
 dataf = pd.DataFrame(data)
 """
+root=tk.Tk()
 def ScoreEpisode(dataf) -> None:
     plt.figure(figsize=(10,6))
     plt.scatter(dataf['watched'],dataf['score'],alpha=0.6)
@@ -34,6 +37,7 @@ def ScoreEpisode(dataf) -> None:
     plt.ylabel('Score')
     plt.grid(True)
     plt.show()
+
 def summary(dataf):
     tv_shows = dataf[dataf['type'] == 'TV']
     movies = dataf[dataf['type'] == 'Movie']
@@ -60,6 +64,7 @@ def scorepie(dataf):
     plt.title('Distribution of scores')
     plt.ylabel('')
     plt.show()
+
 def barstat(dataf):
     print("hello world")
     statuses = dataf['status'].value_counts()
@@ -69,15 +74,16 @@ def barstat(dataf):
     plt.xlabel('statuses')
     plt.ylabel('Amount')
     plt.show()
+
 def longest(dataf):
-    
-    
+   
+
      sorted_df = dataf.sort_values(by='watched', ascending=False)
      top_ten_longest = sorted_df.head(10)
      count = 1
      print("Your 10 longest shows are\n")
      resultStr = ""
-     for index, row in top_ten_longest.iterrows():
+     for _, row in top_ten_longest.iterrows():
         resultStr += f"Number {count} {row['title']} at {row['watched']} episodes watched with a status of {row['status']}\n"
         count += 1
      return resultStr
@@ -87,7 +93,7 @@ def toprated(dataf):
     top_score =sorted_df['score'].max()
     top_scores = sorted_df[sorted_df['score'] == top_score]
     resultStr = ""
-    for index, row in top_scores.iterrows():
+    for _, row in top_scores.iterrows():
         resultStr += f"{row['title']} at a rating of {top_score}\n"
     return resultStr
    
