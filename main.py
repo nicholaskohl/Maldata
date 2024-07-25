@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 import Maldata as md
 #class MalParser:
 
-
+"""
 class StartPage(ttk.Frame):
      def __init__(self,root):
         root.title("Enter in the file name")
@@ -25,26 +25,27 @@ class StartPage(ttk.Frame):
         for child in mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
         filename_entry.focus()
+        """
 class Page1(ttk.Frame):
     def __init__(self,root):
         root.title("Anime Data Analyzer")
         
-        mainframe = ttk.Frame(root, padding="3 3 12 12")
+        mainframe = ttk.Frame(root, padding="6 6 12  12")
         mainframe.grid(column=0, row=0 , sticky=("N W E S"))
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
         root.geometry("1920x1080")
-        self.text_widget = Text(mainframe, height=10, width=40)
-        self.text_widget.grid(column=1, row=2, columnspan=3)
+        self.text_widget = Text(mainframe, height=10, width=50)
+        self.text_widget.grid(column=2, row=2, columnspan=6)
 
         #Need to add  Scores by ep graph, scorepie, barstatus, longest, toprated,
-        ttk.Button(mainframe,text="Scores by Episode Count (opens graph in new window",command=lambda: md.ScoreEpisode(dataf)).grid(column=1,row=6)
-        ttk.Button(mainframe,text="Scores in a Pi chart (opens graph in new window",command=lambda: md.scorepie(dataf)).grid(column=1,row=5)
-        ttk.Button(mainframe,text="Bar Graph by Status",command=lambda: md.barstat(dataf)).grid(column=1,row=4)
-        ttk.Button(mainframe,text="10 Longest Episodes",command=self.update_text2).grid(column=1,row=3)
-        ttk.Button(mainframe,text="top rated shows ",command=self.update_text1).grid(column=1,row=2)
-        ttk.Button(mainframe,text="summary", command=self.update_text).grid(column=1, row=1)
-        ttk.Button(mainframe,text="quit",command=root.destroy).grid(column=1, row=0)
+        ttk.Button(mainframe,text="Scores by Episode Count (opens graph in new window",command=lambda: md.ScoreEpisode(dataf)).grid(column=1,row=5)
+        ttk.Button(mainframe,text="Scores in a Pi chart (opens graph in new window",command=lambda: md.scorepie(dataf)).grid(column=1,row=4)
+        ttk.Button(mainframe,text="Bar Graph by Status",command=lambda: md.barstat(dataf)).grid(column=1,row=3)
+        ttk.Button(mainframe,text="10 Longest Episodes",command=self.update_text2).grid(column=1,row=2)
+        ttk.Button(mainframe,text="top rated shows ",command=self.update_text1).grid(column=1,row=1)
+        ttk.Button(mainframe,text="summary", command=self.update_text).grid(column=1, row=0)
+        ttk.Button(mainframe,text="quit",command=root.destroy).grid(column=1, row=6)
          
     def update_text(self):
         string_value=md.summary(dataf) 
@@ -86,8 +87,7 @@ for anime in Aroot.findall('anime'):
     dataf: pd.DataFrame = pd.DataFrame(data)
 
 root = Tk()
-StartPage(root)
-root.mainloop()
 Page1(root)
 root.mainloop()
+
 
