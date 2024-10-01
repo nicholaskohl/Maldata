@@ -8,9 +8,9 @@ This program only works for the Animelist and not the Mangalist</p>
 <p>You will need to export your anime list from the MAL website <a href=https://myanimelist.net/panel.php?go=export>here.</a><br>
 This project requires 3 external libraries. Which can be installed using the following pip commands:</p>
 <pre>
-pip install pandas
-pip install matplotlib
-pip install numpy
+pip3 install pandas
+pip3 install matplotlib
+pip3 install numpy
 </pre>
 <h2>Installation</h2>
 <ol>
